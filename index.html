@@ -1,76 +1,207 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uitnodiging voor ons Trouwfeest</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
-            text-align: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #e94e77; /* Roze tint voor romantiek */
-        }
-        p {
-            font-size: 18px;
-            margin: 20px 0;
-        }
-        .details {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .rsvp {
-            margin-top: 30px;
-        }
-        .rsvp a {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .rsvp a:hover {
-            background-color: #45a049;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Click Counter XP</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: radial-gradient(circle at top, #0a2a43, #000814);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+/* SHAKE */
+body.shake { animation: shake 0.15s; }
+@keyframes shake {
+  0% { transform: translate(0,0); }
+  25% { transform: translate(8px,-8px); }
+  50% { transform: translate(-8px,8px); }
+  75% { transform: translate(6px,-6px); }
+  100% { transform: translate(0,0); }
+}
+
+/* EFFECT LAYER */
+#effects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* BOX */
+.container {
+  background: rgba(0,0,0,0.45);
+  padding: 30px 40px;
+  border-radius: 20px;
+  text-align: center;
+  width: 360px;
+  z-index: 5;
+}
+
+/* TEXT */
+#status { font-size: 18px; }
+#clicks {
+  font-size: 70px;
+  font-weight: 900;
+  margin: 10px 0;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 20px;
+  font-size: 26px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+#clickBtn {
+  background: linear-gradient(135deg, #00f2ff, #0077ff);
+}
+#retryBtn {
+  margin-top: 10px;
+  background: linear-gradient(135deg, #ff3b3b, #ff0066);
+  color: white;
+}
+#retryBtn:disabled { opacity: 0.4; }
+
+/* XP */
+.xp {
+  position: absolute;
+  font-size: 52px;
+  font-weight: 900;
+  color: #00eaff;
+  text-shadow: 0 0 25px #00eaff;
+  animation: xpPop 1s ease-out forwards;
+}
+@keyframes xpPop {
+  from { opacity: 1; transform: translate(-50%,0) scale(0.9); }
+  to   { opacity: 0; transform: translate(-50%,-120px) scale(1.8); }
+}
+
+/* 🔥 BIG FIREWORK */
+.particle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  filter: blur(0.5px);
+  box-shadow: 0 0 25px currentColor;
+  animation: explode 0.9s ease-out forwards;
+}
+@keyframes explode {
+  from { transform: translate(0,0) scale(1); opacity: 1; }
+  to {
+    transform: translate(var(--x), var(--y)) scale(0);
+    opacity: 0;
+  }
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Je bent uitgenodigd!</h1>
-        <p>Lieve vrienden en familie,</p>
-        <p>We zijn verheugd om jullie uit te nodigen voor ons trouwfeest!</p>
-        
-        <div class="details">
-            <h2>Details</h2>
-            <p><strong>Datum:</strong> [Vul hier de datum in, bijv. 15 juni 2026]</p>
-            <p><strong>Tijd:</strong> [Vul hier de tijd in, bijv. 14:00 uur]</p>
-            <p><strong>Locatie:</strong> [Vul hier de locatie in, bijv. Kasteel van Example, Stad]</p>
-            <p><strong>Dresscode:</strong> [Vul hier de dresscode in, bijv. Feestelijk]</p>
-        </div>
-        
-        <p>We hopen dat jullie erbij kunnen zijn om deze speciale dag met ons te vieren.</p>
-        
-        <div class="rsvp">
-            <p>Laat ons weten of je komt!</p>
-            <a href="mailto:jouwemail@example.com?subject=RSVP Trouwfeest">RSVP via e-mail</a>
-            <!-- Of gebruik een Google Form link als je een formulier wilt: <a href="https://forms.gle/EXAMPLE">RSVP via formulier</a> -->
-        </div>
-        
-        <p>Met liefde,<br>[Jullie namen, bijv. Anna & Bob]</p>
-    </div>
+
+<div id="effects"></div>
+
+<div class="container">
+  <div id="status">Klik om te starten</div>
+  Tijd: <input id="timeInput" type="number" min="1" max="50" value="5"> sec
+  <div id="clicks">0</div>
+  <button id="clickBtn">KLIK!</button>
+  <button id="retryBtn" disabled>Retry</button>
+</div>
+
+<script>
+let clicks = 0, started = false, timeLeft = 5, timer;
+
+const effects = document.getElementById("effects");
+const clickBtn = document.getElementById("clickBtn");
+const retryBtn = document.getElementById("retryBtn");
+const clicksEl = document.getElementById("clicks");
+const statusEl = document.getElementById("status");
+const timeInput = document.getElementById("timeInput");
+
+const colors = ["#00aaff", "#ff2b2b", "#ffd500"];
+
+function spawnXP(x,y){
+  const xp=document.createElement("div");
+  xp.className="xp";
+  xp.textContent="+XP";
+  xp.style.left=x+"px";
+  xp.style.top=y+"px";
+  document.body.appendChild(xp);
+  setTimeout(()=>xp.remove(),1000);
+}
+
+function firework(x,y){
+  for(let i=0;i<30;i++){
+    const p=document.createElement("div");
+    p.className="particle";
+    const angle=Math.random()*Math.PI*2;
+    const dist=Math.random()*180+60;
+    p.style.left=x+"px";
+    p.style.top=y+"px";
+    p.style.color=colors[Math.floor(Math.random()*colors.length)];
+    p.style.background="currentColor";
+    p.style.setProperty("--x",Math.cos(angle)*dist+"px");
+    p.style.setProperty("--y",Math.sin(angle)*dist+"px");
+    effects.appendChild(p);
+    setTimeout(()=>p.remove(),900);
+  }
+}
+
+clickBtn.onclick=()=>{
+  const r=clickBtn.getBoundingClientRect();
+  const x=r.left+r.width/2;
+  const y=r.top+r.height/2;
+
+  if(!started){
+    started=true;
+    timeLeft=Math.min(50,Math.max(1,timeInput.value));
+    timeInput.disabled=true;
+    statusEl.textContent="Tijd: "+timeLeft;
+    timer=setInterval(()=>{
+      timeLeft--;
+      statusEl.textContent="Tijd: "+timeLeft;
+      if(timeLeft<=0){
+        clearInterval(timer);
+        clickBtn.disabled=true;
+        retryBtn.disabled=false;
+        statusEl.textContent="Klaar!";
+      }
+    },1000);
+  }
+
+  if(timeLeft>0){
+    clicks++;
+    clicksEl.textContent=clicks;
+    spawnXP(x,y);
+    firework(x,y);
+    document.body.classList.add("shake");
+    setTimeout(()=>document.body.classList.remove("shake"),150);
+  }
+};
+
+retryBtn.onclick=()=>{
+  clicks=0;
+  started=false;
+  clicksEl.textContent="0";
+  statusEl.textContent="Klik om te starten";
+  clickBtn.disabled=false;
+  retryBtn.disabled=true;
+  timeInput.disabled=false;
+};
+</script>
+
 </body>
 </html>
